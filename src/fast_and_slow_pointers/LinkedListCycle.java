@@ -60,8 +60,6 @@ public class LinkedListCycle {
         Let n be the number of nodes in a linked list.
             + 0<=n<=500
             + -10^5<=n<=10^5
-
-
      */
 
     public static boolean linkedListCycle(Node head) {
