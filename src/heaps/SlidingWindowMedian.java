@@ -55,7 +55,12 @@ public class SlidingWindowMedian {
                 //insert the new element
                 insertNum(nums[right + 1]);
 
-                //re-balancing both heaps according to value of balance
+                // re-balancing both heaps according to value of balance
+                // Note: balance can be incremented twice: once when removing an element greater than the max-heap root, and once when adding a new element
+                // less than the max-heap root, so balance variable can be +2 or -2 in rare cases. In practice,the code assumes balance will only be ±1.
+                // If balance becomes ±2, the single re-balancing step might not be sufficient, and additional re-balancing would be needed. The solution
+                // relies on the fact that the sliding window move one element at a time, so such large imbalance is uncommon. But if you want to handle
+                // this strictly, you could repeat the re-balancing step until balance is 0, ensuring the heaps are properly balanced.
                 if(balance > 0) {
                     minHeap.offer(maxHeap.poll());
                 }
@@ -93,7 +98,7 @@ public class SlidingWindowMedian {
 
     private static double findMedian(int windowSize) {
         //(1) Note that following logic to find median won't work for this problem because the element marked for removal from heap may not have got actually removed;
-        //it will be removed only it reached top of either heaps. So finding median based on comparison of heap sizes won't work here as actual sizes may be different
+        //it will be removed only if it reached top of either heaps. So finding median based on comparison of heap sizes won't work here as actual sizes may be different
         //from expected size of maxHeap = minHeap+1
         //(2) Also, if element marked for removal is not at the top, it does not impact median calculation provided we do it based on window size.
         //If window size is even, then median is mean of maxHeap root and minHeap root, else we take root of maxHeap.
