@@ -39,37 +39,38 @@ public class ScheduleTasksOnMinimumMachines {
         }
     }
 
-    private static PriorityQueue<Task> minHeap = new PriorityQueue<>(Comparator.comparingInt(Task::getStart));
+    private static PriorityQueue<Task> minHeap1 = new PriorityQueue<>(Comparator.comparingInt(Task::getStart));
+    private static PriorityQueue<Task> minHeap2 = new PriorityQueue<>(Comparator.comparingInt(Task::getEnd));
 
     private static List<List<Task>> scheduleTasksOnMinimumMachinesNaiveMethod(List<Task> tasks) {
         for(Task task: tasks) {
-            minHeap.offer(task);
+            minHeap1.offer(task);
         }
 
         List<List<Task>> machines = new ArrayList<>();
 
-        while(!minHeap.isEmpty()) {
+        while(!minHeap1.isEmpty()) {
             int numberOfMachines = machines.size();
             int i = 0;
             while(true) {
                 //if no machines assigned yet
                 if(machines.isEmpty()) {
                     List<Task> machine = new ArrayList<>();
-                    Task initialTask = minHeap.poll();
+                    Task initialTask = minHeap1.poll();
                     machine.add(initialTask);
                     machines.add(machine);
                     break;
                 }
 
 
-                if(i<= numberOfMachines-1 && machines.get(i).get(machines.get(i).size()-1).getEnd() <= minHeap.peek().getStart()) {
-                    machines.get(i).add(minHeap.poll());
+                if(i<= numberOfMachines-1 && machines.get(i).get(machines.get(i).size()-1).getEnd() <= minHeap1.peek().getStart()) {
+                    machines.get(i).add(minHeap1.poll());
                     break;
                 }
 
                 if(i > numberOfMachines-1) {
                     List<Task> machine = new ArrayList<>();
-                    Task task = minHeap.poll();
+                    Task task = minHeap1.poll();
                     machine.add(task);
                     machines.add(machine);
                     break;
@@ -80,6 +81,22 @@ public class ScheduleTasksOnMinimumMachines {
         }
         return machines;
     }
+
+    private static int scheduleTasksOnMinimumMachinesOptimumMethod(List<Task> tasks) {
+        //sorting tasks in ascending order by their start time
+        tasks.sort(Comparator.comparingInt(Task::getStart));
+
+        for(Task task: tasks) {
+            if(!minHeap2.isEmpty() && minHeap2.peek().getEnd() <= task.getStart()) {
+                minHeap2.poll();
+            }
+
+            minHeap2.offer(task);
+        }
+
+        return minHeap2.size();
+    }
+
     public static void main(String[] args) {
         List<Task> tasks1 = Arrays.asList(new Task(1,1), new Task(5,5), new Task(8,8), new Task(4,4), new Task(6,6), new Task(10,10), new Task(7,7));
         List<Task> tasks2 = Arrays.asList(new Task(1, 7), new Task(1, 7), new Task(1, 7), new Task(1, 7), new Task(1, 7), new Task(1, 7));
@@ -88,10 +105,13 @@ public class ScheduleTasksOnMinimumMachines {
         List<Task> tasks5 = Arrays.asList(new Task(12, 13), new Task(13, 15), new Task(17, 20), new Task(13, 14), new Task(19, 21), new Task(18, 20));
 
 
-        List<List<Task>> machines = scheduleTasksOnMinimumMachines(tasks5);
+        /*List<List<Task>> machines = scheduleTasksOnMinimumMachines(tasks5);
         System.out.println("Number of machine required:" + machines.size());
         for(List<Task> machine: machines) {
             System.out.println(machine);
-        }
+        }*/
+        int numberOfMachines = scheduleTasksOnMinimumMachinesOptimumMethod(tasks2);
+        System.out.println("Number of machine required:" + numberOfMachines);
+
     }
 }
