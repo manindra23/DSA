@@ -68,12 +68,13 @@ public class KthLargestElementInStream {
     }
 
     public static void main(String[] args) {
-        KthLargestElementInStream kthLargest = new KthLargestElementInStream();
-        kthLargest.init(new int[]{4,5,8,2}, 3);
-        System.out.println(kthLargest.add(3));
-        System.out.println(kthLargest.add(5));
-        System.out.println(kthLargest.add(10));
-        System.out.println(kthLargest.add(9));
-        System.out.println(kthLargest.add(4));
+        int[] nums = {3, 6, 9, 10};
+        KthLargestElementInStream kLargest = new KthLargestElementInStream(nums, 3);
+        int[] val = {4, 7, 10, 8, 15};
+        for (int i = 0; i < val.length; i++) {
+            System.out.println("\tAdding a new number " + val[i] + " to the stream");
+            System.out.println("\n\tKth largest element in the stream: " + kLargest.add(val[i]));
+            System.out.println(new String(new char[100]).replace('\0', '-'));
+        }
     }
 }
