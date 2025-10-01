@@ -84,7 +84,29 @@ class BinaryTree {
 }
 
 public class LowestCommonAncestorOfBinaryTree {
-    private static BTNode lowestCommonAncestorOfBinaryTreeMyMethod(BTNode p, BTNode q) {
+    private static BTNode lowestCommonAncestorOfBinaryOptimumMethod(BTNode p, BTNode q) {
+        BTNode tempP = p;
+        BTNode tempQ = q;
+
+        if(tempP != null && tempQ != null) {
+            while (tempP != tempQ) {
+                tempP = tempP.parent;
+                tempQ = tempQ.parent;
+                if (tempP == null) {
+                    tempP = q;
+                }
+                if (tempQ == null) {
+                    tempQ = p;
+                }
+            }
+        } else {
+            return null;
+        }
+
+        return tempP;
+    }
+
+    private static BTNode lowestCommonAncestorOfBinaryTreeNaiveMethod(BTNode p, BTNode q) {
         Set<Integer> ancestorSet = new HashSet<>();
         BTNode tempP = p;
         BTNode tempQ = q;
@@ -112,32 +134,6 @@ public class LowestCommonAncestorOfBinaryTree {
         }
     }
 
-    private static BTNode lowestCommonAncestorOfBinaryTreeTutorialMethod(BTNode p, BTNode q) {
-            BTNode tempP = p;
-            BTNode tempQ = q;
-
-            if(tempP == null || tempQ == null) {
-                return null;
-            }
-
-            while(true) {
-                if(tempP == tempQ) {
-                    return tempP;
-                }
-                if(tempP.parent == null) {
-                    tempP = q;
-                } else{
-                    tempP = tempP.parent;
-                }
-
-                if(tempQ.parent == null) {
-                    tempQ = p;
-                } else{
-                    tempQ = tempQ.parent;
-                }
-            }
-    }
-
     public static void main(String[] args) {
         List<List<Integer>> list = Arrays.asList(
                 Arrays.asList(100, 50, 200, 25, 75, 350),
@@ -160,8 +156,8 @@ public class LowestCommonAncestorOfBinaryTree {
             binaryTree.constructBinaryTree(list.get(i));
             BTNode p = binaryTree.findNode(binaryTree.root, inputNodes.get(i).get(0));
             BTNode q = binaryTree.findNode(binaryTree.root, inputNodes.get(i).get(1));
-            //BTNode lowestCommonAncestor = lowestCommonAncestorOfBinaryTreeMyMethod(p, q);
-            BTNode lowestCommonAncestor = lowestCommonAncestorOfBinaryTreeTutorialMethod(p, q);
+            //BTNode lowestCommonAncestor = lowestCommonAncestorOfBinaryTreeNaiveMethod(p, q);
+            BTNode lowestCommonAncestor = lowestCommonAncestorOfBinaryOptimumMethod(p, q);
             if (lowestCommonAncestor != null) {
                 System.out.println("Lowest common ancestor is node with value = " + lowestCommonAncestor.data);
             }
